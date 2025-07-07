@@ -1,0 +1,16 @@
+beautifulsoup4==4.13.4
+bs4==0.0.2
+certifi==2025.6.15
+charset-normalizer==3.4.2
+colorama==0.4.6
+coloredlogs==15.0.1
+distro==1.9.0
+humanfriendly==10.0
+idna==3.10
+lxml==6.0.0
+packaging==25.0
+PyYAML==6.0.2
+requests==2.32.4
+soupsieve==2.7
+typing_extensions==4.14.0
+urllib3==2.5.0

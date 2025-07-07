@@ -1,0 +1,53 @@
+# 475256b
+
+opti:
+  # - O0
+  # - O1
+  # - O2
+  # - O3
+  # - Os
+  - Ofast
+
+arch:
+  - x86_32
+  - x86_64
+  - arm_32
+  - arm_64
+  - mips_32
+  - mips_64
+  - mipseb_32
+  - mipseb_64
+  - ppceb_32
+  - ppceb_64
+  - ppc_64
+
+compiler:
+  - clang-7.1.0
+  - clang-8.0.1
+  - clang-9.0.1
+  - clang-10.0.1
+  - clang-11.1.0
+  - clang-12.0.1
+  - clang-13.0.1
+  - clang-14.0.6
+  - clang-15.0.7
+  - clang-16.0.6
+  - clang-17.0.6
+  - clang-18.1.8
+  - clang-19.1.7
+
+  - gcc-8.5.0
+  - gcc-9.5.0
+  - gcc-10.5.0
+  - gcc-11.5.0
+  - gcc-12.4.0
+  - gcc-13.3.0
+  
+  # - gcc-6.5.0
+  # - gcc-7.5.0
+  # - gcc-14.2.0
+
+extra_compiler_options:
+  pie: True
+  no_inline: True
+  stack_protector: True

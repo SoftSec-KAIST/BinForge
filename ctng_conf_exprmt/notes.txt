@@ -1,0 +1,2 @@
+RISC-V 32/64-bit is supported starting from gcc-7 and clang-9.
+* It looks like RISC-V is properly supported starting with clang-10.

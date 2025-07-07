@@ -1,0 +1,29 @@
+#!/bin/bash
+
+COMPILER_BINARY="${BinForge}/tools/clang/${clang-ver}/bin/_clang"
+
+if [[ "$*" != *"--print-multiarch"* ]]; then
+    exec "$COMPILER_BINARY" "$@"
+fi
+
+# find and print --target=...
+target="x86_64-linux-gnu"
+for arg in "$@"; do
+    if [[ $arg == --target=* ]]; then
+        target="${arg#--target=}"
+    fi
+done
+
+conftest_dir="$HOME/BinForge/patches/conftest"
+original_conftest_c=$conftest_dir/conftest.c
+rand_str=$(mktemp -u XXXXXX)
+temp_conftest_c=$conftest_dir/conftest_$rand_str.c
+temp_conftest_out=$conftest_dir/conftest_$rand_str.out
+
+cp $original_conftest_c $temp_conftest_c
+$COMPILER_BINARY --target=$target -E $temp_conftest_c >$temp_conftest_out # 2>/dev/null
+grep -v '^#' $temp_conftest_out | grep -v '^ *$' | tr -d ' 	'
+rm -f $temp_conftest_c $temp_conftest_out
+
+# EOF
+

@@ -1,0 +1,12 @@
+projects:
+  - name: spell
+  - name: which
+    url: ""
+    deps:
+  - name: bool
+    url: https://ftp.gnu.org/gnu/bool/bool-0.2.2.tar.xz
+  - name: acl
+    deps:
+      - attr
+
+# EOF

@@ -1,0 +1,173 @@
+projects:
+  - name: a2ps
+    deps:
+      - libpaper
+      - gc
+  - name: acl
+    deps:
+      - attr
+  - name: adns
+  - name: apl
+  - name: attr
+  - name: bash
+  - name: bc
+  - name: binutils
+  - name: bison
+  - name: bool
+  - name: bzip2
+  - name: ccd2cue
+  - name: cfitsio
+    deps:
+      - curl
+      - zlib
+  - name: cflow
+  - name: coreutils
+  - name: cpio
+  - name: cppi
+  - name: ctags
+    deps:
+      - libxml2
+      - pcre2
+  - name: dap
+  - name: datamash
+  - name: ddrescue
+  - name: dico
+    deps:
+      - libpython
+      - libtool
+      - libxcrypt
+      - pcre2
+      - zlib
+  - name: diffutils
+  - name: direvent
+  - name: ed
+  - name: enscript
+  - name: findutils
+  - name: fontopia
+    deps:
+      - gnudos
+      - ncurses
+  - name: freeipmi
+  - name: fribidi
+  - name: gawk
+  - name: gc
+    deps:
+      - libatomic
+  - name: gcal
+  - name: gdbm
+  - name: gettext
+  - name: glpk
+  - name: gmp
+  - name: gnudos
+    deps:
+      - ncurses
+  - name: gnu-pw-mgr
+  - name: grep
+  - name: gsasl
+  - name: gss
+  - name: gtypist
+    deps:
+      - ncurses
+  - name: gzip
+  - name: hello
+  - name: indent
+  - name: inetutils
+    deps:
+      - libxcrypt
+      - ncurses
+  - name: jansson
+  - name: less
+    deps:
+      - ncurses
+  - name: libatomic
+  - name: libcapstone
+  - name: libcddb
+  - name: libcdio
+    deps:
+      - ncurses
+  - name: libevent
+    deps:
+      - openssl
+  - name: libgsasl
+  - name: libiconv
+  - name: libidn
+  - name: libmd
+  - name: libmicrohttpd
+  - name: libpaper
+  - name: libpsl
+    deps:
+      - libidn
+      - libunistring
+  - name: libpython
+    deps:
+      - bzip2
+      - gdbm
+      - libffi
+      - libuuid
+      - libxcrypt
+      - ncurses
+      - openssl
+      - readline
+      - xz
+      - zlib
+  - name: libtasn1
+  - name: libtool
+  - name: libunistring
+  - name: libuuid
+  - name: libxcrypt
+  - name: libxml2
+    deps:
+      - libpython
+  - name: lightning
+  - name: m4
+  - name: macchanger
+  - name: make
+  - name: micron
+  - name: mpc
+    deps:
+      - gmp
+      - mpfr
+  - name: mpfr
+    deps:
+      - gmp
+  - name: mtools
+  - name: nano
+    deps:
+      - ncurses
+  - name: ncurses
+  - name: openssl
+  - name: osip
+  - name: parted
+    deps:
+      - libuuid
+      - ncurses
+      - readline
+  - name: patch
+  - name: readline
+  - name: recutils
+    deps:
+      - libuuid
+  - name: rush
+  - name: screen
+    deps:
+      - libxcrypt
+      - ncurses
+  - name: sed
+  - name: sharutils
+  - name: spell
+  - name: tar
+  - name: texinfo
+    deps:
+      - ncurses
+  - name: time
+  - name: tokyocabinet
+    deps:
+      - bzip2
+      - zlib
+  - name: units
+  - name: wcslib
+  - name: wdiff
+  - name: which
+  - name: xorriso
+  - name: xz
+  - name: zstd

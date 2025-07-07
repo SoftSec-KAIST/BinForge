@@ -1,0 +1,55 @@
+projects:
+  - name: acl
+    url: https://download.savannah.nongnu.org/releases/acl/acl-2.3.2.tar.gz
+  - name: attr
+    url: http://repo.jing.rocks/nongnu/attr/attr-2.5.2.tar.gz
+  - name: bzip2
+    url: https://gitlab.com/bzip2/bzip2
+  - name: cfitsio
+    url: https://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/cfitsio-4.6.2.tar.gz
+  - name: ctags
+    url: https://github.com/universal-ctags/ctags/releases/download/v6.1.0/universal-ctags-6.1.0.tar.gz
+  - name: fribidi
+    url: https://github.com/fribidi/fribidi/archive/refs/tags/v1.0.16.tar.gz
+  - name: gc
+    url: https://github.com/ivmai/bdwgc/releases/download/v8.2.8/gc-8.2.8.tar.gz
+  - name: jansson
+    url: https://github.com/akheron/jansson/releases/download/v2.14.1/jansson-2.14.1.tar.gz
+  - name: libatomic
+    url: https://github.com/bdwgc/libatomic_ops/releases/download/v7.8.2/libatomic_ops-7.8.2.tar.gz
+  - name: libcapstone
+    url: https://github.com/libcapstone/libcapstone/archive/refs/tags/4.0.2.tar.gz
+  - name: libcddb
+    url: http://prdownloads.sourceforge.net/libcddb/libcddb-1.3.2.tar.bz2
+  - name: libevent
+    url: https://github.com/libevent/libevent/releases/download/release-2.2.1-alpha/libevent-2.2.1-alpha-dev.tar.gz
+  - name: libgcrypt
+    url: https://www.gnupg.org/ftp/gcrypt/libgcrypt/libgcrypt-1.11.0.tar.bz2
+  - name: libgsasl
+    url: https://ftp.gnu.org/gnu/gsasl/libgsasl-1.10.0.tar.gz
+  - name: libmd
+    url: https://archive.hadrons.org/software/libmd/libmd-1.1.0.tar.xz
+  - name: libpaper
+    url: https://github.com/rrthomas/libpaper/releases/download/v2.2.6/libpaper-2.2.6.tar.gz
+  - name: libpsl
+    url: https://github.com/rockdaboot/libpsl/releases/download/0.21.5/libpsl-0.21.5.tar.gz
+  - name: libpython
+    url: https://code.launchpad.net/ubuntu/+archive/primary/+sourcefiles/python3.12/3.12.2-4build4/python3.12_3.12.2.orig.tar.xz
+  - name: libuuid
+    url: https://sourceforge.net/projects/libuuid/files/libuuid-1.0.3.tar.gz/download
+  - name: libxcrypt
+    url: https://github.com/besser82/libxcrypt/releases/download/v4.4.38/libxcrypt-4.4.38.tar.xz
+  - name: libxml2
+    url: https://github.com/GNOME/libxml2/archive/refs/tags/v2.14.1.tar.gz
+  - name: openssl
+    url: https://github.com/openssl/openssl/releases/download/openssl-3.5.0/openssl-3.5.0.tar.gz
+  - name: tokyocabinet
+    url: https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/tokyocabinet/1.4.48-15.1build1/tokyocabinet_1.4.48.orig.tar.gz
+  - name: wcslib
+    url: https://www.atnf.csiro.au/computing/software/wcs/WCS/wcslib-8.4.tar.bz2
+  - name: xz
+    url: https://github.com/tukaani-project/xz/releases/download/v5.8.1/xz-5.8.1.tar.gz
+  - name: zstd
+    url: https://github.com/facebook/zstd/releases/download/v1.5.7/zstd-1.5.7.tar.gz
+
+# EOF

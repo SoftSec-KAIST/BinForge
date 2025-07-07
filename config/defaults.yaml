@@ -1,0 +1,38 @@
+# ------------------------------------------------------------------------------
+# Project Default Configuration File
+#
+# This file defines the default configuration values used throughout the
+# project, including directory paths, number of parallel jobs, and other runtime
+# settings.
+#
+# To override a configuration value, edit the corresponding entry in this file.
+# All scripts and modules will load settings from here by default.
+#
+# Path: /home/user/BinForge/config/defaults.yaml
+# ------------------------------------------------------------------------------
+
+# PROJECT_PATH: "/home/user/BinForge"
+
+# TOOL_PATH: "/home/user/BinForge/tools"
+# CONFIG_PATH: "/home/user/BinForge/config"
+# SCRIPT_PATH: "/home/user/BinForge/script"
+
+# DEFAULT_APT_PROJECTS_PATH: "/home/user/BinForge/config/default_apt_projects/apt_projects.yaml"
+
+# GCC_TOOLCHAIN_TARGETS_YAML: "/home/user/BinForge/config/gcc_toolchain_targets.yaml"
+# CLANG_TOOLCHAIN_TARGETS_YAML: "/home/user/BinForge/config/clang_toolchain_targets.yaml"
+
+# CTNG_PATH: "/home/user/BinForge/tools/crosstool-ng"
+# CTNG_BIN: "/home/user/BinForge/tools/crosstool-ng/ct-ng"
+# CTNG_CONF_PATH: "/home/user/BinForge/ctng_conf"
+# CTNG_TARBALL_PATH: "/home/user/BinForge/tools/ctng_tarballs"
+
+# EXTRA_DEP_PATH: "/home/user/BinForge/tools/extra_deps"
+# DEFAULTS_YAML_PATH: "/home/user/BinForge/config/defaults.yaml"
+
+# SYSTEM_NAME: "ubuntu"
+
+# NUM_JOBS: 32
+# MAX_JOBS: 32
+
+# EOF

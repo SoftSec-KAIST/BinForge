@@ -1,0 +1,51 @@
+#!/bin/bash
+
+COMPILER_BINARY="${BinForge}/tools/gcc/${gcc-ver}/bin/_gcc"
+
+args_str="$*"
+
+if [[ ! "$args_str" =~ "-pie" ]]; then
+    exec "$COMPILER_BINARY" "$@"
+fi
+
+if [[ ! "$args_str" =~ "-shared" ]]; then
+    exec "$COMPILER_BINARY" "$@"
+fi
+
+args=("$@")
+new_args=()
+pie_index=-1
+shared_index=-1
+
+for i in "${!args[@]}"; do
+    if [[ "${args[i]}" == "-shared" && $shared_index -eq -1 ]]; then
+        shared_index=$i
+    elif [[ "${args[i]}" == "-pie" ]]; then
+        pie_index=$i
+    fi
+done
+
+if [[ $pie_index -lt $shared_index ]]; then
+    exec "$COMPILER_BINARY" "$@"
+fi
+
+for i in "${!args[@]}"; do
+    if [[ "${args[i]}" == "-pie" ]]; then
+        if [[ $pie_index -gt $shared_index ]]; then
+            new_args+=("-pie" "-shared")  # '-pie' -> '-pie -shared'
+        else
+            new_args+=("${args[i]}")
+        fi
+    elif [[ "${args[i]}" != "-shared" ]]; then
+        new_args+=("${args[i]}")
+    fi
+done
+
+echo "[BinForgeDebug] Warning: -shared appears before -pie in the arguments. Reordering..."
+echo "[BinForgeDebug]   Original arguments: ${args[*]}"
+echo "[BinForgeDebug]   Reordered arguments: ${new_args[*]}"
+
+exec "$COMPILER_BINARY" "${new_args[@]}"
+
+# EOF
+

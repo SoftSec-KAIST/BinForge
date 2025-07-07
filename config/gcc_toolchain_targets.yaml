@@ -1,0 +1,83 @@
+# bootstrap[version][arch]
+bootstrap:
+  version: 13.3.0
+  arch: x86_64
+
+# toolchain_targets[version][arch]
+toolchain_targets:
+  # version
+  8.5.0:
+    # arch list
+    - x86_32
+    - x86_64
+    - arm_32
+    - arm_64
+    - mips_32
+    - mips_64
+    - mipseb_32
+    - mipseb_64
+    - ppc_64
+    - ppceb_32
+    - ppceb_64
+  9.5.0:
+    - x86_32
+    - x86_64
+    - arm_32
+    - arm_64
+    - mips_32
+    - mips_64
+    - mipseb_32
+    - mipseb_64
+    - ppc_64
+    - ppceb_32
+    - ppceb_64
+  10.5.0:
+    - x86_32
+    - x86_64
+    - arm_32
+    - arm_64
+    - mips_32
+    - mips_64
+    - mipseb_32
+    - mipseb_64
+    - ppc_64
+    - ppceb_32
+    - ppceb_64
+  11.5.0:
+    - x86_32
+    - x86_64
+    - arm_32
+    - arm_64
+    - mips_32
+    - mips_64
+    - mipseb_32
+    - mipseb_64
+    - ppc_64
+    - ppceb_32
+    - ppceb_64
+  12.4.0:
+    - x86_32
+    - x86_64
+    - arm_32
+    - arm_64
+    - mips_32
+    - mips_64
+    - mipseb_32
+    - mipseb_64
+    - ppc_64
+    - ppceb_32
+    - ppceb_64
+  13.3.0:
+    - x86_32
+    - x86_64
+    - arm_32
+    - arm_64
+    - mips_32
+    - mips_64
+    - mipseb_32
+    - mipseb_64
+    - ppc_64
+    - ppceb_32
+    - ppceb_64
+
+# EOF

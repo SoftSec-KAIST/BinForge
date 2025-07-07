@@ -1,0 +1,126 @@
+projects:
+  - name: a2ps
+    deps:
+      - libpaper
+      - gc
+  - name: acl
+    deps:
+      - attr
+  - name: cfitsio
+    deps:
+      - curl
+      - zlib
+  - name: ctags
+    deps:
+      - libxml2
+      - pcre2
+  - name: dico
+    deps:
+      - libpython
+      - libtool
+      - libxcrypt
+      - pcre2
+      - zlib
+  - name: fontopia
+    deps:
+      - gnudos
+      - ncurses
+  - name: gc
+    deps:
+      - libatomic
+  - name: gnudos
+    deps:
+      - ncurses
+  - name: gtypist
+    deps:
+      - ncurses
+  - name: inetutils
+    deps:
+      - libxcrypt
+      - ncurses
+  - name: less
+    deps:
+      - ncurses
+  - name: libcdio
+    deps:
+      - ncurses
+  - name: libevent
+    deps:
+      - openssl
+  - name: libpsl
+    deps:
+      - libidn
+      - libunistring
+  - name: libpython
+    deps:
+      - bzip2
+      - gdbm
+      - libffi
+      - libuuid
+      - libxcrypt
+      - ncurses
+      - openssl
+      - readline
+      - xz
+      - zlib
+  - name: libxml2
+    deps:
+      - libpython
+  - name: mpc
+    deps:
+      - gmp
+      - mpfr
+  - name: mpfr
+    deps:
+      - gmp
+  - name: nano
+    deps:
+      - ncurses
+  - name: parted
+    deps:
+      - libuuid
+      - ncurses
+      - readline
+  - name: recutils
+    deps:
+      - libuuid
+  - name: screen
+    deps:
+      - libxcrypt
+      - ncurses
+  - name: texinfo
+    deps:
+      - ncurses
+  - name: tokyocabinet
+    deps:
+      - bzip2
+      - zlib
+
+  ##! ============================ Test for Dale ===============================
+
+  - name: libming
+    deps:
+      - bzip2
+      - zlib
+
+  - name: libpng
+    deps:
+      - zlib
+
+  - name: libredwg
+    deps:
+      - pcre2
+      - libxml2
+
+  - name: libxslt
+    deps:
+      - libxml2
+      - libpython
+
+  - name: tcpdump
+    deps:
+      - openssl
+      - libpcap
+      - ncurses
+
+# EOF
