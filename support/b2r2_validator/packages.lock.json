@@ -1,0 +1,70 @@
+{
+  "version": 1,
+  "dependencies": {
+    "net10.0": {
+      "B2R2.FrontEnd.BinFile": {
+        "type": "Direct",
+        "requested": "[0.10.1, 0.10.1]",
+        "resolved": "0.10.1",
+        "contentHash": "s2qRhtt3Fb3t/8/x6fmjkW/3c0r1Ki+XZVYR8u5hrqFZLDYXDNvukUGwGwXxTEVnGUs86j+Uruj2oywqyMYetA==",
+        "dependencies": {
+          "B2R2.BinIR": "0.10.1",
+          "B2R2.Core": "0.10.1",
+          "B2R2.FrontEnd.BinLifter": "0.10.1",
+          "B2R2.FrontEnd.Registers": "0.10.1",
+          "FSharp.Core": "10.1.300"
+        }
+      },
+      "B2R2.BinIR": {
+        "type": "Transitive",
+        "resolved": "0.10.1",
+        "contentHash": "TNe1BE6iVf3F3azHB//bt8KzekN6edXRnJO5S1oM00tzI5Svanb5UIqPXUFtwnkP9l2rRRGwYPcND816R6EnDQ==",
+        "dependencies": {
+          "B2R2.Core": "0.10.1",
+          "FParsec": "1.1.1",
+          "FSharp.Core": "10.1.300"
+        }
+      },
+      "B2R2.Core": {
+        "type": "Transitive",
+        "resolved": "0.10.1",
+        "contentHash": "qNIoF0Lq4pAzPD4T6HnrHUwvbVgz0ZkiqMAdJ3gJSgyPZl0LhoXHmc4cD1AiktbHWKj15Uva4Y3KyuSBj7jSUQ==",
+        "dependencies": {
+          "FSharp.Core": "10.1.300"
+        }
+      },
+      "B2R2.FrontEnd.BinLifter": {
+        "type": "Transitive",
+        "resolved": "0.10.1",
+        "contentHash": "VAqGTe7jaZ9Zmq2p0+66R4rado6rqnfrIO9DvvGr2AiZUOSjtZOnrhBp7dFL246sLSKC10h42/Z8Z3RCz7iQLQ==",
+        "dependencies": {
+          "B2R2.BinIR": "0.10.1",
+          "B2R2.Core": "0.10.1",
+          "FSharp.Core": "10.1.300"
+        }
+      },
+      "B2R2.FrontEnd.Registers": {
+        "type": "Transitive",
+        "resolved": "0.10.1",
+        "contentHash": "EZ19CMmAfkQpyo3VyAia5iw9+63698RMEOB4iheUf5ASdJge7g9gSVWyH8++UBXg3D/C9eVWomugfVFobBdeDw==",
+        "dependencies": {
+          "B2R2.Core": "0.10.1",
+          "FSharp.Core": "10.1.300"
+        }
+      },
+      "FParsec": {
+        "type": "Transitive",
+        "resolved": "1.1.1",
+        "contentHash": "Wdjf/gCNLEwd+0nUCDh9jAIIcKGwfhRramySTnTcVVgNC6i4Vp5aJklUJJfvFkEZMYNZEDGcI8pCa36/TmwmSg==",
+        "dependencies": {
+          "FSharp.Core": "4.3.4"
+        }
+      },
+      "FSharp.Core": {
+        "type": "Transitive",
+        "resolved": "10.1.300",
+        "contentHash": "BACHDBo/KL615GifW2wGB8vw3HLraCJb77VN/XVmQZPceNw+Oc+J+McehOo2yHtcr7hABmW4EqZZzVYiR1Z1EQ=="
+      }
+    }
+  }
+}

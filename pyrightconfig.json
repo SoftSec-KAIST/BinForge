@@ -1,0 +1,12 @@
+{
+    "exclude": [
+        "**/__pycache__",
+        "**/.git",
+        "venv/",
+        "config/",
+        "tools/",
+        "ctng_conf*/",
+        "mytools/",
+        "patches/"
+    ]
+}

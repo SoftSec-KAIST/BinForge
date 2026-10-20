@@ -1,11 +1,10 @@
-from typing import Iterable, NoReturn, Callable, List, Dict, Any, IO
+from typing import Iterable, NoReturn, Callable, Any, IO
+
 
 __all__ = [
     "Iterable",
     "NoReturn",
     "Callable",
-    "List",
-    "Dict",
     "Any",
     "IO",
 ]

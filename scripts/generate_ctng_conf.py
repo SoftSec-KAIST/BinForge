@@ -7,10 +7,9 @@ import re
 from packaging import version
 
 from binforge import config
-from binforge.utils import mkdir, exit_program, execute_command
 from binforge.types_helper import *
-
 from binforge.logging_helper import logger
+from binforge.utils import execute_command, mkdir
 
 TOOL_PATH = config.TOOL_PATH
 

@@ -1,0 +1,758 @@
+build:
+  opti:
+    - O0
+    - O1
+    - O2
+    - O3
+    - Os
+    - Ofast
+
+  arch:
+    - x86_32
+    - x86_64
+    - arm_32
+    - arm_64
+    - mips_32
+    - mips_64
+    - mipseb_32
+    - mipseb_64
+    - ppceb_32
+    - ppceb_64
+    - ppc_64
+
+  compiler:
+    - clang-7.1.0
+    - clang-8.0.1
+    - clang-9.0.1
+    - clang-10.0.1
+    - clang-11.1.0
+    - clang-12.0.1
+    - clang-13.0.1
+    - clang-14.0.6
+    - clang-15.0.7
+    - clang-16.0.6
+    - clang-17.0.6
+    - clang-18.1.8
+    - clang-19.1.7
+    - gcc-8.5.0
+    - gcc-9.5.0
+    - gcc-10.5.0
+    - gcc-11.5.0
+    - gcc-12.4.0
+    - gcc-13.3.0
+
+  extra_compiler_options:
+    pie: false
+    no_inline: false
+    stack_protector: false
+
+
+targets:
+  - a2ps              # (1)
+  - binutils          # (17)
+  - bool              # (1)
+  - ccd2cue           # (1)
+  - cflow             # (1)
+  - coreutils         # (103)
+  - cpio              # (2)
+  - cppi              # (1)
+  - dap               # (4)
+  - datamash          # (2)
+  - direvent          # (1)
+  - enscript          # (3)
+  - findutils         # (4)
+  - gawk              # (16)
+  - gcal              # (4)
+  - gdbm              # (4)
+  - glpk              # (2)
+  - gmp               # (1)
+  - gnu-pw-mgr        # (3)
+  - gnudos            # (2)
+  - grep              # (1)
+  - gsasl             # (2)
+  - gsl               # (4)
+  - gss               # (2)
+  - gzip              # (1)
+  - hello             # (1)
+  - inetutils         # (25)
+  - libiconv          # (3)
+  - libidn            # (2)
+  - libmicrohttpd     # (1)
+  - libtasn1          # (4)
+  - libtool           # (1)
+  - libunistring      # (1)
+  - lightning         # (1)
+  - macchanger        # (1)
+  - nettle            # (5)
+  - osip              # (2)
+  - patch             # (1)
+  - plotutils         # (9)
+  - readline          # (2)
+  - recutils          # (1)
+  - sed               # (1)
+  - sharutils         # (4)
+  - spell             # (1)
+  - tar               # (2)
+  - texinfo           # (2)
+  - time              # (1)
+  - units             # (1)
+  - wdiff             # (1)
+  - which             # (1)
+  - xorriso           # (1)
+
+
+projects:
+  a2ps:
+    version: 4.15.8
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/a2ps/a2ps-4.15.8.tar.gz
+      archive:
+        group: gnu
+        name: a2ps.tar.gz
+        md5: c782f393c815f0359aa380a05d2b29cb
+    deps:
+      - gc
+      - libpaper
+
+  binutils:
+    version: 2.46.0
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/binutils/binutils-2.46.0.tar.gz
+      archive:
+        group: gnu
+        name: binutils.tar.gz
+        md5: f2e4607e7260febe074568d224dc6d35
+    cflags:
+      - -Wno-error
+    options:
+      - --disable-gprofng
+
+  bool:
+    version: 0.2.2
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/bool/bool-0.2.2.tar.xz
+      archive:
+        group: gnu
+        name: bool.tar.xz
+        md5: 8dae1d9d96cb4febdee1653478046cc7
+
+  ccd2cue:
+    version: 0.5
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/ccd2cue/ccd2cue-0.5.tar.gz
+      archive:
+        group: gnu
+        name: ccd2cue.tar.gz
+        md5: 565eb34e3ab5331ee5aab2fe215118aa
+
+  cflow:
+    version: 1.8
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/cflow/cflow-1.8.tar.gz
+      archive:
+        group: gnu
+        name: cflow.tar.gz
+        md5: 43337f2c07c3b9ff627706ad94153110
+
+  coreutils:
+    version: 9.9
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/coreutils/coreutils-9.9.tar.gz
+      archive:
+        group: gnu
+        name: coreutils.tar.gz
+        md5: 7a4fae1225905eedad69e89b6cfc5d60
+    ldflags:
+      - -lm
+    options:
+      - LIBS=-lm
+      - utils_cv_avx512_intrinsic_exists=no
+      - utils_cv_avx512_pclmul_intrinsic_exists=no
+      - utils_cv_stdbuf_supported=no
+
+  cpio:
+    version: 2.15
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/cpio/cpio-2.15.tar.gz
+      archive:
+        group: gnu
+        name: cpio.tar.gz
+        md5: 64130013fa9900f6b7de36de53573985
+
+  cppi:
+    version: 1.18
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/cppi/cppi-1.18.tar.xz
+      archive:
+        group: gnu
+        name: cppi.tar.xz
+        md5: 720f4e442287283a02979ba43a44366e
+
+  dap:
+    version: 3.10
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/dap/dap-3.10.tar.gz
+      archive:
+        group: gnu
+        name: dap.tar.gz
+        md5: 1e876517f58ff1dda1d158affc36dd2d
+    cflags:
+      - -Wno-implicit-function-declaration
+
+  datamash:
+    version: 1.9
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/datamash/datamash-1.9.tar.gz
+      archive:
+        group: gnu
+        name: datamash.tar.gz
+        md5: 3f9345dcd51f0e11148be8c807f81eea
+    cflags:
+      - -fno-finite-math-only
+    options:
+      - gl_cv_func_strcasecmp_works=yes
+
+  direvent:
+    version: 5.4
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/direvent/direvent-5.4.tar.gz
+      archive:
+        group: gnu
+        name: direvent.tar.gz
+        md5: d212162f51674495dc959c28d472602e
+
+  enscript:
+    version: 1.6.6
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/enscript/enscript-1.6.6.tar.gz
+      archive:
+        group: gnu
+        name: enscript.tar.gz
+        md5: 3acc242b829adacabcaf28533f049afd
+
+  findutils:
+    version: 4.10.0
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/findutils/findutils-4.10.0.tar.xz
+      archive:
+        group: gnu
+        name: findutils.tar.xz
+        md5: 870cfd71c07d37ebe56f9f4aaf4ad872
+
+  gawk:
+    version: 5.4.0
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/gawk/gawk-5.4.0.tar.gz
+      archive:
+        group: gnu
+        name: gawk.tar.gz
+        md5: 506afb6178cfd32c5c1ab738ddff5dbd
+    cflags:
+      - -fno-finite-math-only
+
+  gcal:
+    version: 4.1
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/gcal/gcal-4.1.tar.gz
+      archive:
+        group: gnu
+        name: gcal.tar.gz
+        md5: 434232fa6275347c6580496131875234
+    cflags:
+      - -fno-finite-math-only
+
+  gdbm:
+    version: 1.26
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/gdbm/gdbm-1.26.tar.gz
+      archive:
+        group: gnu
+        name: gdbm.tar.gz
+        md5: aaa600665bc89e2febb3c7bd90679115
+
+  glpk:
+    version: 5.0
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/glpk/glpk-5.0.tar.gz
+      archive:
+        group: gnu
+        name: glpk.tar.gz
+        md5: 91499dc0c139b221846cae60e5c7d222
+    cflags:
+      - -fno-finite-math-only
+
+  gmp:
+    version: 6.3.0
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/gmp/gmp-6.3.0.tar.gz
+      archive:
+        group: gnu
+        name: gmp.tar.gz
+        md5: 3390cf8cc96bbec5a9123f2fb22480db
+
+  gnu-pw-mgr:
+    version: 2.7.4
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/gnu-pw-mgr/gnu-pw-mgr-2.7.4.tar.gz
+      archive:
+        group: gnu
+        name: gnu-pw-mgr.tar.gz
+        md5: a02e6ba4fd6d187c0e7ebcf9ebb21fdb
+
+  gnudos:
+    version: 2.0
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/gnudos/gnudos-2.0.tar.gz
+      archive:
+        group: gnu
+        name: gnudos.tar.gz
+        md5: 1384d1df54f2fc6338d57d89dbe1fe3f
+    deps:
+      - ncurses
+    ldflags:
+      - -lncursesw
+      - -ltinfo
+
+  grep:
+    version: 3.12
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/grep/grep-3.12.tar.gz
+      archive:
+        group: gnu
+        name: grep.tar.gz
+        md5: 9f68a249ae780579414ebaeaf2ed6e68
+
+  gsasl:
+    version: 2.2.2
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/gsasl/gsasl-2.2.2.tar.gz
+      archive:
+        group: gnu
+        name: gsasl.tar.gz
+        md5: 7b668e350fe09228f0f5e342175e04d6
+
+  gsl:
+    version: 2.8
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/gsl/gsl-2.8.tar.gz
+      archive:
+        group: gnu
+        name: gsl.tar.gz
+        md5: 182ec03204f164e67238c9116591a37d
+    cflags:
+      - -fno-finite-math-only
+
+  gss:
+    version: 1.0.4
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/gss/gss-1.0.4.tar.gz
+      archive:
+        group: gnu
+        name: gss.tar.gz
+        md5: 2906b202fd5d955767a1f136006615f5
+
+  gzip:
+    version: 1.14
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/gzip/gzip-1.14.tar.gz
+      archive:
+        group: gnu
+        name: gzip.tar.gz
+        md5: e152c98ab4cb2d98a2236a7292415760
+
+  hello:
+    version: 2.12.3
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/hello/hello-2.12.3.tar.gz
+      archive:
+        group: gnu
+        name: hello.tar.gz
+        md5: abf08b16a616ed2902df4ab4846884be
+
+  inetutils:
+    version: 2.7
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/inetutils/inetutils-2.7.tar.gz
+      archive:
+        group: gnu
+        name: inetutils.tar.gz
+        md5: eed294e7b170cbbb0ff86493ef4c1273
+    deps:
+      - libxcrypt
+      - ncurses
+    cflags:
+      - -D_PATH_PROCNET_DEV="/proc/net/dev"
+    options:
+      - --with-path-procnet-dev="/proc/net/dev"
+    ldflags:
+      - -lncursesw
+      - -ltinfo
+
+  libiconv:
+    version: 1.19
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/libiconv/libiconv-1.19.tar.gz
+      archive:
+        group: gnu
+        name: libiconv.tar.gz
+        md5: c04d0fa4cae4e9a4febc457fc00ee519
+
+  libidn:
+    version: 2.3.8
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/libidn/libidn2-2.3.8.tar.gz
+      archive:
+        group: gnu
+        name: libidn.tar.gz
+        md5: a8e113e040d57a523684e141970eea7a
+
+  libmicrohttpd:
+    version: 1.0.3
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/libmicrohttpd/libmicrohttpd-1.0.3.tar.gz
+      archive:
+        group: gnu
+        name: libmicrohttpd.tar.gz
+        md5: 9fc5946625d54c85f573be05f9eec935
+    deps:
+      - zlib
+
+  libtasn1:
+    version: 4.21.0
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/libtasn1/libtasn1-4.21.0.tar.gz
+      archive:
+        group: gnu
+        name: libtasn1.tar.gz
+        md5: 2ee1d9f3aa66f1e308c46a283aa9a8c2
+
+  libtool:
+    version: 2.5.4
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/libtool/libtool-2.5.4.tar.gz
+      archive:
+        group: gnu
+        name: libtool.tar.gz
+        md5: 862d906983d9b423b072285d999d8672
+
+  libunistring:
+    version: 1.4.2
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/libunistring/libunistring-1.4.2.tar.gz
+      archive:
+        group: gnu
+        name: libunistring.tar.gz
+        md5: a1b88d4c0f3b0504d10cfe2a76a7bee7
+
+  lightning:
+    version: 2.2.3
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/lightning/lightning-2.2.3.tar.gz
+      archive:
+        group: gnu
+        name: lightning.tar.gz
+        md5: 46889d97921419d7bb79467340f9c8db
+
+  macchanger:
+    version: 1.6.0
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/macchanger/macchanger-1.6.0.tar.gz
+      archive:
+        group: gnu
+        name: macchanger.tar.gz
+        md5: 1257b18e9067a8192c9747da52aabdda
+
+  nettle:
+    version: 4.0
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/nettle/nettle-4.0.tar.gz
+      archive:
+        group: gnu
+        name: nettle.tar.gz
+        md5: 144401453f9f35e53938bcacfc59800e
+    options:
+      - --disable-assembler
+
+  osip:
+    version: 5.3.1
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/osip/libosip2-5.3.1.tar.gz
+      archive:
+        group: gnu
+        name: osip.tar.gz
+        md5: 11c0d66a6daa71ac14f0719ab6b2d8a0
+
+  patch:
+    version: 2.8
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/patch/patch-2.8.tar.gz
+      archive:
+        group: gnu
+        name: patch.tar.gz
+        md5: bf4cbfd161e4c5fa2086a54a090dde1a
+
+  plotutils:
+    version: 2.6
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/plotutils/plotutils-2.6.tar.gz
+      archive:
+        group: gnu
+        name: plotutils.tar.gz
+        md5: c08a424bd2438c80a786a7f4b5bb6a40
+    cflags:
+      - -fno-finite-math-only
+      - -I${PWD}/libxmi
+
+  readline:
+    version: 8.3
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/readline/readline-8.3.tar.gz
+      archive:
+        group: gnu
+        name: readline.tar.gz
+        md5: 25a73bfb2a3ad7146c5e9d4408d9f6cd
+
+  recutils:
+    version: 1.9
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/recutils/recutils-1.9.tar.gz
+      archive:
+        group: gnu
+        name: recutils.tar.gz
+        md5: ee5da209df9a1f80e65c9739a814ce34
+    deps:
+      - libuuid
+    cflags:
+      - -Wno-implicit-function-declaration
+
+  sed:
+    version: 4.9
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/sed/sed-4.9.tar.gz
+      archive:
+        group: gnu
+        name: sed.tar.gz
+        md5: a50000a406f767bfa35db319704ef7b5
+
+  sharutils:
+    version: 4.15.2
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/sharutils/sharutils-4.15.2.tar.gz
+      archive:
+        group: gnu
+        name: sharutils.tar.gz
+        md5: 32a51b23e25ad5e6af4b89f228be1800
+    cflags:
+      - -fcommon
+
+  spell:
+    version: 1.1
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/spell/spell-1.1.tar.gz
+      archive:
+        group: gnu
+        name: spell.tar.gz
+        md5: c1dc2c4fd30b28d6480279b79a6fb889
+
+  tar:
+    version: 1.35
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/tar/tar-1.35.tar.gz
+      archive:
+        group: gnu
+        name: tar.tar.gz
+        md5: 96f4b399c2e88204718cab80a9253024
+
+  texinfo:
+    version: 7.3
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/texinfo/texinfo-7.3.tar.gz
+      archive:
+        group: gnu
+        name: texinfo.tar.gz
+        md5: 348742f41a07021c3d3452b76de83597
+    deps:
+      - ncurses
+    ldflags:
+      - -lncursesw
+      - -ltinfo
+    options:
+      - --disable-perl-xs
+
+  time:
+    version: 1.9
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/time/time-1.9.tar.gz
+      archive:
+        group: gnu
+        name: time.tar.gz
+        md5: d2356e0fe1c0b85285d83c6b2ad51b5f
+    cflags:
+      - -Wno-implicit-function-declaration
+
+  units:
+    version: 2.27
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/units/units-2.27.tar.gz
+      archive:
+        group: gnu
+        name: units.tar.gz
+        md5: 82c95def7df47aa6f2c04ddbe7cb5b2d
+    cflags:
+      - -fno-finite-math-only
+
+  wdiff:
+    version: 1.2.2
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/wdiff/wdiff-1.2.2.tar.gz
+      archive:
+        group: gnu
+        name: wdiff.tar.gz
+        md5: 1c6ddd1f3106139ff9fe00e934df715f
+
+  which:
+    version: 2.23
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/which/which-2.23.tar.gz
+      archive:
+        group: gnu
+        name: which.tar.gz
+        md5: 1963b85914132d78373f02a84cdb3c86
+
+  xorriso:
+    version: 1.5.8
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/xorriso/xorriso-1.5.8.tar.gz
+      archive:
+        group: gnu
+        name: xorriso.tar.gz
+        md5: 37305024afdf7b85ac778e8c33771903
+
+  gc:
+    source:
+      type: url
+      value: https://github.com/ivmai/bdwgc/releases/download/v8.2.8/gc-8.2.8.tar.gz
+      archive:
+        group: binkit-deps
+        name: gc-8.2.8.tar.gz
+        md5: ad7298be1a300fc0ce75196718036c61
+    deps:
+      - libatomic
+
+  libatomic:
+    source:
+      type: url
+      value: https://github.com/bdwgc/libatomic_ops/releases/download/v7.8.2/libatomic_ops-7.8.2.tar.gz
+      archive:
+        group: binkit-deps
+        name: libatomic_ops-7.8.2.tar.gz
+        md5: d07b3d8369d7f9efdca59f7501dd1117
+
+  libpaper:
+    source:
+      type: url
+      value: https://github.com/rrthomas/libpaper/releases/download/v2.2.6/libpaper-2.2.6.tar.gz
+      archive:
+        group: binkit-deps
+        name: libpaper-2.2.6.tar.gz
+        md5: 794552e5e5b9796c15bc222fefd9e1ff
+    options:
+      - --enable-relocatable
+
+  libuuid:
+    source:
+      type: url
+      value: https://downloads.sourceforge.net/project/libuuid/libuuid-1.0.3.tar.gz
+      archive:
+        group: binkit-deps
+        name: libuuid-1.0.3.tar.gz
+        md5: d44d866d06286c08ba0846aba1086d68
+    cflags:
+      - -Wno-implicit-function-declaration
+
+  libxcrypt:
+    source:
+      type: url
+      value: https://github.com/besser82/libxcrypt/releases/download/v4.4.38/libxcrypt-4.4.38.tar.xz
+      archive:
+        group: binkit-deps
+        name: libxcrypt-4.4.38.tar.xz
+        md5: 1796a5d20098e9dd9e3f576803c83000
+
+  ncurses:
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/ncurses/ncurses-6.6.tar.gz
+      archive:
+        group: binkit-deps
+        name: ncurses-6.6.tar.gz
+        md5: dd45bf6854430af403452a7a6a40652c
+    options:
+      - --disable-stripping
+      - --with-shared
+      - --with-termlib=tinfo
+      - --enable-widec
+      - --enable-overwrite
+      - --without-debug
+      - --without-normal
+
+  zlib:
+    version: 1.3.1
+    source:
+      type: url
+      value: https://github.com/madler/zlib/releases/download/v1.3.1/zlib-1.3.1.tar.gz
+      archive:
+        group: binkit-deps
+        name: zlib-1.3.1.tar.gz
+        md5: 9855b6d802d7fe5b7bd5b196a2271655

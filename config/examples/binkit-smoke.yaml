@@ -1,0 +1,48 @@
+# Spell and macchanger: 4 compilers x 9 architectures x 3 optimizations, 216 variants.
+build:
+  arch:
+  - x86_32
+  - x86_64
+  - arm_32
+  - arm_64
+  - mips_32
+  - mipseb_64
+  - ppceb_32
+  - ppceb_64
+  - ppc_64
+  compiler:
+  - gcc-8.5.0
+  - gcc-13.3.0
+  - clang-7.1.0
+  - clang-19.1.7
+  opti:
+  - O0
+  - O2
+  - Ofast
+  extra_compiler_options:
+    pie: true
+    no_inline: true
+    stack_protector: true
+  combine_extra_compiler_options: false
+projects:
+  spell:
+    version: 1.1
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/spell/spell-1.1.tar.gz
+      archive:
+        group: gnu
+        name: spell.tar.gz
+        md5: c1dc2c4fd30b28d6480279b79a6fb889
+  macchanger:
+    version: 1.6.0
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/macchanger/macchanger-1.6.0.tar.gz
+      archive:
+        group: gnu
+        name: macchanger.tar.gz
+        md5: 1257b18e9067a8192c9747da52aabdda
+targets:
+- spell
+- macchanger

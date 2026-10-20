@@ -1,3 +1,6 @@
+compiler_group_name:
+  gcc
+
 # bootstrap[version][arch]
 bootstrap:
   version: 13.3.0

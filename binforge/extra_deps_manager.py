@@ -2,135 +2,213 @@ from binforge.utils import *
 from binforge import config
 from binforge.models import Project
 from binforge.compile_manager import compile_project
-from binforge.source_manager import set_project_info
+from binforge.conf_manager import analyze_projects
+from binforge.source_manager import download_and_extract_projects
 
 import concurrent.futures
-from collections import defaultdict
+from collections import defaultdict, deque
+import json
+from pathlib import Path
+from binforge.source_snapshot import materialize_projects, tree_sha256
+from binforge.build_monitor_state import update_run, update_variant
 
-def compile_dep(dep: Project, arch: str, extra_dep_path: str) -> None:
-    install_prefix = os.path.join(extra_dep_path, "install", arch, dep.name)
-
-    if directory_exists(install_prefix):
-        if not is_directory_empty(install_prefix):
-            logger.info(f"Already installed ({dep.name})")
-            return
-
-    mkdir(install_prefix)
-    dep.install_prefix = install_prefix
-
-    comb = "gcc-13.3.0", arch, "O2"
-    PATH = get_env_variable("PATH")
-
-    compile_project(dep, comb, PATH, EXTRA_DEP=True)
+DEFAULT_DEP_JOBS = min(config.NUM_JOBS, 32)
 
 
-def install_deps(dep_list: list[Project]) -> None:
-    arch_list = ["x86_32", "x86_64", "arm_32", "arm_64", "mips_32", "mips_64", "mipseb_32", "mipseb_64", "ppceb_32", "ppceb_64", "ppc_64"]
+def deps_of(projects: list[Project], name: str) -> list[str]:
+    for p in projects:
+        if p.name == name:
+            return p.dep_list or []
+    return []
+
+
+def compute_dependency_layers(projects: list[Project], targets: list[str]) -> list[list[str]]:
+    targets_set = set(targets)
+
+    project_names_list = [p.name for p in projects]
+
+    need: set[str] = set()
+    dep_targets: set[str] = set()
+    stack = list(targets)
+    seen = set()
+
+    while stack:
+        cur = stack.pop()
+        if cur in seen:
+            continue
+        seen.add(cur)
+        for d in deps_of(projects, cur):
+            if d not in project_names_list:
+                raise ValueError(f"undefined dep '{d}' (referenced by '{cur}')")
+            if d in targets_set:
+                dep_targets.add(d)
+            if d not in need:
+                need.add(d)
+                stack.append(d)
+
+    nodes = need.union(dep_targets)
+    if not nodes:
+        return []
+
+    adj = defaultdict(set)
+    indeg = {n: 0 for n in nodes}
+
+    candidates = nodes.union(targets_set)
+    for u in candidates:
+        for d in deps_of(projects, u):
+            if d in nodes and u in nodes:
+                adj[d].add(u)
+
+    for d, users in adj.items():
+        for u in users:
+            indeg[u] += 1
+
+    q = deque(sorted([n for n, deg in indeg.items() if deg == 0]))
+    visited = set()
+    layers: list[list[str]] = []
+
+    while q:
+        cur_level = []
+        for _ in range(len(q)):
+            v = q.popleft()
+            if v in visited:
+                continue
+            visited.add(v)
+            cur_level.append(v)
+            for w in adj.get(v, ()):
+                indeg[w] -= 1
+                if indeg[w] == 0:
+                    q.append(w)
+        if cur_level:
+            layers.append(sorted(cur_level))
+
+    remaining = [n for n in nodes if n not in visited]
+    if remaining:
+        raise RuntimeError(f"dependency cycle detected among: {sorted(remaining)}")
+
+    return layers
+
+
+def install_deps(dep_list: list[Project], arch_list: list[str], jobs: int = DEFAULT_DEP_JOBS,
+                 monitor_run_dir=None) -> None:
+    if jobs < 1:
+        raise ValueError("dependency jobs must be >= 1")
     extra_dep_path = config.EXTRA_DEP_PATH
-    with concurrent.futures.ProcessPoolExecutor() as executor:
-        futures = []
+    with concurrent.futures.ProcessPoolExecutor(max_workers=jobs) as executor:
+        futures = {}
         for dep in dep_list:
             log_path = os.path.join(extra_dep_path, 'log', dep.name)
             mkdir(log_path, exist_ok=True)
 
             #! Download and extract source code
-            dep.download_source_file()
-            dep.extract_source_file()
+            # dep.download_source_file()
+            # dep.extract_source_file()
 
             for arch in arch_list:
-                futures.append(executor.submit(compile_dep, dep, arch, extra_dep_path))
-        concurrent.futures.wait(futures)
+                future = executor.submit(compile_dep, dep, arch, extra_dep_path,
+                                         monitor_run_dir)
+                futures[future] = (dep.name, arch)
+        for future in concurrent.futures.as_completed(futures):
+            try:
+                future.result()
+            except BaseException as exc:
+                if monitor_run_dir:
+                    name, arch = futures[future]
+                    update_variant(monitor_run_dir, name, ("gcc-13.3.0", arch, "O2"),
+                                   state="failed", phase="failed",
+                                   error=f"{type(exc).__name__}: {exc}")
+                raise
 
 
-def get_dep_depths():
-    data = load_yaml("config/dep_map.yaml")
-    deps_map = {}
+def compile_dep(dep: Project, arch: str, extra_dep_path: str,
+                monitor_run_dir=None) -> None:
+    install_prefix = os.path.join(extra_dep_path, "install", arch, dep.name)
+    marker = Path(install_prefix) / ".binforge-complete.json"
+    identity = {"project": dep.name, "arch": arch, "compiler": "gcc-13.3.0",
+                "optimization": "O2", "source_tree_sha256": getattr(dep, "source_tree_sha256", None),
+                "options": dep.conf_options, "cflags": dep.cflags, "ldflags": dep.ldflags}
+    if marker.exists():
+        if json.loads(marker.read_text()) != identity:
+            raise RuntimeError(f"Dependency installation does not match requested source or settings: {install_prefix}")
+        logger.info("Already installed (%s, %s)", dep.name, arch)
+        if monitor_run_dir:
+            update_variant(monitor_run_dir, dep.name, ("gcc-13.3.0", arch, "O2"),
+                           state="succeeded", phase="cached")
+        return
+    if directory_exists(install_prefix) and not is_directory_empty(install_prefix):
+        raise RuntimeError(f"Incomplete dependency installation requires cleanup: {install_prefix}")
+    mkdir(install_prefix, exist_ok=True)
+    dep.install_prefix = install_prefix
 
-    for entry in data["projects"]:
-        name = entry["name"]
-        deps = entry.get("deps", [])
-        deps_map[name] = deps
+    comb = "gcc-13.3.0", arch, "O2"
+    PATH = get_env_variable("PATH")
 
-    all_deps = set()
-    for deps in deps_map.values():
-        all_deps.update(deps)
-
-    depth_cache = {}
-
-    def get_depth(dep_name):
-        if dep_name in depth_cache:
-            return depth_cache[dep_name]
-        if dep_name not in deps_map or not deps_map[dep_name]:
-            depth_cache[dep_name] = 0
-            return 0
-        dep_depths = [get_depth(sub_dep) for sub_dep in deps_map[dep_name]]
-        max_depth = 1 + max(dep_depths)
-        depth_cache[dep_name] = max_depth
-        return max_depth
-
-    dep_depths = {dep: get_depth(dep) for dep in all_deps}
-
-    return dep_depths
+    if not compile_project(dep, comb, PATH, EXTRA_DEP=True,
+                           monitor_run_dir=str(monitor_run_dir) if monitor_run_dir else None):
+        raise RuntimeError(f"Dependency build failed: {dep.name} ({arch})")
+    if is_directory_empty(install_prefix):
+        raise RuntimeError(f"Dependency installed no files: {dep.name} ({arch})")
+    marker.write_text(json.dumps(identity, sort_keys=True) + "\n")
 
 
-def compile_extra_deps():
+def compile_extra_deps(projects, targets, arch_list, *, snapshot_root=None,
+                       source_dataset=None, jobs=DEFAULT_DEP_JOBS, monitor_run_dir=None):
     extra_dep_path = config.EXTRA_DEP_PATH
     logger.info(f"extra_dep_path: {extra_dep_path}")
     mkdir(extra_dep_path, exist_ok=True)
 
-    dep_depths = get_dep_depths()
+    #! Set deps
+    dep_project_names = set()
+    for proj in projects:
+        for dep_name in proj.dep_list:
+            dep_project_names.add(dep_name)
 
-    group_by_depth = defaultdict(list)
-    for dep, depth in dep_depths.items():
-        group_by_depth[depth].append(dep)
+    dep_projects = []
+    for proj in projects:
+        if proj.name in dep_project_names:
+            dep_projects.append(proj)
 
-    for depth in sorted(group_by_depth):
-        deps = sorted(group_by_depth[depth])
-        print(f"Depth {depth}: {deps}")
+    layers = compute_dependency_layers(projects, targets)
+    for i, lvl in enumerate(layers):
+        print(f"Depth {i}: {', '.join(lvl)}")
 
-    dep_map = load_yaml("config/dep_map.yaml")["projects"]
-    name_to_deps = {item['name']: item['deps'] for item in dep_map}
+    def set_dep(name, dep_projects) -> Project: # type: ignore
+        for dep_proj in dep_projects:
+            if name == dep_proj.name:
+                return dep_proj
 
-    #! Supported
-    data = load_yaml("config/supported_deps.yaml")
-    supported_deps = {item["name"]: item for item in data["projects"]}
+    project_names_list = [p.name for p in projects]
+    for depth, names in enumerate(layers):
+        if monitor_run_dir:
+            update_run(monitor_run_dir, phase=f"source depth {depth}")
+        target_deps = sorted(names)
+        print(f"Depth {depth}: {target_deps}")
 
-    #! Install dependencies by depth
-    for depth in sorted(group_by_depth):
-        target_deps = sorted(group_by_depth[depth])
-
-        dep_list = []
+        dep_objs = []
         for name in target_deps:
-            # print(f"[DEBUG] target_dep: {name}")
-            if name not in supported_deps.keys():
-                logger.error(f"URL must be given: {name}")
-                exit()
+            if name not in project_names_list:
+                raise ValueError(f"unknown dep '{name}'")
 
-            url = supported_deps[name].get("url")
+            dep = set_dep(name, dep_projects)
 
-            version = supported_deps[name].get("version") or None
-            if version is not None:
-                version = str(version).strip()
-            if not version:
-                version = None
+            dep.base_path = extra_dep_path
+            dep.source_path = os.path.join(extra_dep_path, "sources", name)
+            dep.log_path = os.path.join(extra_dep_path, "log", name)
+            dep.bins_path = os.path.join(extra_dep_path, "bins", name)
+            dep.dep_path = extra_dep_path
 
-            use_git_clone = supported_deps[name].get("use_git_clone") or None
+            dep_objs.append(dep)
 
-
-            dep = Project(name, extra_dep_path)
-            dep.version = version
-            dep.use_git_clone = use_git_clone
-            set_project_info(dep, url)
-
-            #! Set deps of target dep
-            deps_of_dep = name_to_deps.get(name) or []
-            dep.dep_list = deps_of_dep
-
-            dep_list.append(dep)
-
-        install_deps(dep_list)
-
-    return
+        if snapshot_root is not None:
+            materialize_projects(dep_objs, target_deps, snapshot_root, source_dataset)
+            for dep in dep_objs:
+                dep.source_tree_sha256 = tree_sha256(Path(dep.source_path) / dep.name)
+        else:
+            download_and_extract_projects(dep_objs, target_deps)
+        analyze_projects(dep_objs)
+        if monitor_run_dir:
+            update_run(monitor_run_dir, phase=f"build depth {depth}")
+        install_deps(dep_objs, arch_list, jobs=jobs, monitor_run_dir=monitor_run_dir)
 
 
 # EOF

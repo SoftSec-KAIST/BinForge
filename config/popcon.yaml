@@ -1,0 +1,844 @@
+build:
+  opti:
+    - O0
+    - O1
+    - O2
+    - O3
+    - Os
+    - Ofast
+  arch:
+    - x86_32
+    - x86_64
+    - arm_32
+    - arm_64
+    - mips_32
+    - mips_64
+    - mipseb_32
+    - mipseb_64
+    - ppceb_32
+    - ppceb_64
+    - ppc_64
+  compiler:
+    - clang-7.1.0
+    - clang-8.0.1
+    - clang-9.0.1
+    - clang-10.0.1
+    - clang-11.1.0
+    - clang-12.0.1
+    - clang-13.0.1
+    - clang-14.0.6
+    - clang-15.0.7
+    - clang-16.0.6
+    - clang-17.0.6
+    - clang-18.1.8
+    - clang-19.1.7
+    - gcc-8.5.0
+    - gcc-9.5.0
+    - gcc-10.5.0
+    - gcc-11.5.0
+    - gcc-12.4.0
+    - gcc-13.3.0
+  extra_compiler_options:
+    pie: false
+    no_inline: false
+    stack_protector: false
+
+targets:
+  - base-passwd                      # (1)
+  - bash                             # (37)
+  - debianutils                      # (3)
+  - diffutils                        # (4)
+  - dosfstools                       # (3)
+  - file                             # (2)
+  - less                             # (3)
+  - libacl1                          # (4)
+  - libasound2-data                  # (3)
+  - libasyncns0                      # (1)
+  - libattr1                         # (4)
+  - libavc1394-0                     # (5)
+  - libblkid1                        # (101)
+  - libbrotli1                       # (4)
+  - libbsd0                          # (1)
+  # - libcaca0                       # (1)
+  - libcrypt1                        # (1)
+  - libdatrie1                       # (2)
+  - libdbus-1-3                      # (11)
+  - libdebconfclient0                # (18)
+  - libdeflate0                      # (3)
+  - libdvdnav4                       # (1)
+  - libevdev2                        # (4)
+  - libexif12                        # (1)
+  - libexpat1                        # (2)
+  - libfaad2                         # (3)
+  - libfftw3-double3                 # (1)
+  - libflite1                        # (21)
+  - libfribidi0                      # (2)
+  - libfstrm0                        # (4)
+  - libgd3                           # (5)
+  - libgphoto2-l10n                  # (24)
+  - libiec61883-0                    # (3)
+  - libjansson4                      # (1)
+  - libjemalloc2                     # (1)
+  - libjxr-tools                     # (4)
+  - liblerc4                         # (1)
+  - liblockfile-bin                  # (1)
+  - libltdl7                         # (1)
+  - liblz4-1                         # (3)
+  - liblzma5                         # (5)
+  - liblzo2-2                        # (1)
+  - libmaxminddb0                    # (2)
+  - libmd0                           # (1)
+  - libmnl0                          # (1)
+  - libmpc3                          # (1)
+  - libmpcdec6                       # (6)
+  - libmpfr6                         # (1)
+  - libnetfilter-conntrack3          # (1)
+  - libnfnetlink0                    # (1)
+  - libnftables1                     # (2)
+  - libnftnl11                       # (1)
+  - libnghttp2-14                    # (1)
+  - libnl-3-200                      # (64)
+  - libnss-mdns                      # (6)
+  - libogg0                          # (1)
+  - libonig5                         # (1)
+  - libopencore-amrnb0               # (2)
+  - libopenjp2-7                     # (4)
+  - libp11-kit0                      # (7)
+  - libpam-modules                   # (42)
+  - libpaper-utils                   # (2)
+  - libpciaccess0                    # (1)
+  - libpcre2-8-0                     # (4)
+  - libpipeline1                     # (1)
+  - libpopt0                         # (1)
+  - libraw1394-11                    # (4)
+  - libsamplerate0                   # (1)
+  - libsbc1                          # (4)
+  - libseccomp2                      # (2)
+  - libshine3                        # (2)
+  - libshout3                        # (1)
+  - libslang2                        # (2)
+  - libsndfile1                      # (11)
+  - libsodium23                      # (1)
+  - libspeex1                        # (1)
+  - libthai-data                     # (1)
+  - libtheora0                       # (3)
+  - libtiff6                         # (20)
+  - libtirpc-common                  # (1)
+  - libtwolame0                      # (1)
+  - libuchardet0                     # (2)
+  - libudfread0                      # (1)
+  - libvo-amrwbenc0                  # (1)
+  - libwavpack1                      # (5)
+  - libwebpmux3                      # (9)
+  - libxml2                          # (3)
+  - libxslt1.1                       # (2)
+  - libxtables12                     # (120)
+  - libxxhash0                       # (2)
+  - libyajl2                         # (3)
+  - libyaml-0-2                      # (1)
+  - libzmq5                          # (1)
+  - libzvbi-common                   # (6)
+  - logrotate                        # (1)
+  - nano                             # (1)
+  - ocl-icd-libopencl1               # (2)
+  - parted                           # (2)
+  - procps                           # (18)
+  - psmisc                           # (5)
+  - sudo                             # (9)
+
+  #! Example case
+  # - e2fsprogs                        #! (31)     (ex) cflags
+  # - libdaemon0                       #! (1)      (ex) options
+  # - libyuv0                          #! (3)      (ex) ldflags
+
+  # - libsdl2-2.0-0                    # (1)      ldflags
+  # - libmysofa1                       # (0)      options failed
+  # - libgraphite2-3                   # (2)      hang
+
+
+#! ===========================================================================
+
+
+projects:
+
+  base-passwd:
+    options:
+      - --disable-selinux
+      - --disable-debconf
+
+  bash:
+    cflags:
+      - -Wno-implicit-function-declaration
+
+  debianutils:
+
+  diffutils:
+    version: 1:3.10-1build1
+
+  dosfstools:
+
+  file:
+
+  less:
+    deps:
+      - ncurses
+    cflags:
+      - -Wno-error=implicit-function-declaration
+    ldflags:
+      - -lncursesw
+      - -ltinfo
+
+  libacl1:
+    deps:
+      - attr
+
+  libasound2-data:
+    cflags:
+      - -fno-finite-math-only
+
+  libasyncns0:
+    options:
+      - ac_cv_func_malloc_0_nonnull=yes
+
+  libattr1:
+
+  libavc1394-0:
+    deps:
+      - libraw1394
+
+  libblkid1:
+    source:
+      type: apt
+      value: util-linux
+    options:
+      - --disable-libmount
+    deps:
+      - ncurses
+      - zlib
+      - libxcrypt
+    ldflags:
+      - -lm
+      - -lncursesw
+      - -ltinfo
+
+  libbrotli1:
+    cflags:
+      - -fno-finite-math-only
+
+  libbsd0:
+    deps:
+      - libmd
+
+  # libcaca0:
+
+  libcrypt1:
+    options:
+      - --disable-werror
+
+  libdatrie1:
+
+  libdbus-1-3:
+    deps:
+      - libexpat
+
+  libdebconfclient0:
+    deps:
+      - libdebian-installer
+      - ncurses
+    options:
+      - NCURSES_LIBS=-lncursesw
+    ldflags:
+      - -ldebian-installer
+      - -lncursesw
+      - -ltinfo
+
+  libdeflate0:
+
+  libdvdnav4:
+    deps:
+      - dvdread
+
+  libevdev2:
+    cflags:
+      - -Wno-deprecated-ofast
+
+  libexif12:
+
+  libexpat1:
+
+  libfaad2:
+    cflags:
+      - -fno-finite-math-only
+
+  libfftw3-double3:
+    cflags:
+      - -fno-finite-math-only
+
+  libflite1:
+    cflags:
+      - -fno-finite-math-only
+    options:
+      - --enable-shared
+
+  libfribidi0:
+
+  libfstrm0:
+    deps:
+      - libevent
+
+  libgd3:
+    cflags:
+      - -fno-finite-math-only
+    deps:
+      - zlib
+
+  libgphoto2-l10n:
+    deps:
+      - libtool
+      - libxml2
+      - zlib
+    cflags:
+      - -fno-finite-math-only
+
+  libiec61883-0:
+    deps:
+      - libraw1394
+
+  libjansson4:
+
+  libjemalloc2:
+
+  libjxr-tools:
+    cflags:
+      - -Wno-implicit-function-declaration
+      - -fno-finite-math-only
+
+  liblerc4:
+
+  liblockfile-bin:
+
+  libltdl7:
+
+  liblz4-1:
+
+  liblzma5:
+
+  liblzo2-2:
+    options:
+      - --enable-shared
+
+  libmaxminddb0:
+
+  libmd0:
+
+  libmnl0:
+
+  libmpc3:
+    deps:
+      - mpfr
+      - gmp
+
+  libmpcdec6:
+    cflags:
+      - -fno-finite-math-only
+
+  libmpfr6:
+    deps:
+      - gmp
+
+  libnetfilter-conntrack3:
+    deps:
+      - libnfnetlink
+      - libmnl
+
+  libnfnetlink0:
+
+  libnftables1:
+    deps:
+      - libmnl
+      - libnftnl
+      - gmp
+      - libedit
+      - readline
+      - ncurses
+    ldflags:
+      - -lmnl
+      - -lnftnl
+      - -ltinfo
+
+  libnftnl11:
+    deps:
+      - libmnl
+
+  libnghttp2-14:
+
+  libnl-3-200:
+
+  libnss-mdns:
+
+  libogg0:
+
+  libonig5:
+
+  libopencore-amrnb0:
+
+  libopenjp2-7:
+    cflags:
+      - -fno-finite-math-only
+
+  libp11-kit0:
+    deps:
+      - libtasn1
+      - libffi
+
+  libpam-modules:
+    options:
+      - --disable-doc
+    ldflags:
+      - -lm
+      - -latomic
+    deps:
+      - libxcrypt
+
+  libpaper-utils:
+
+  libpciaccess0:
+
+  libpcre2-8-0:
+
+  libpipeline1:
+
+  libpopt0:
+
+  libraw1394-11:
+
+  libsamplerate0:
+
+  libsbc1:
+    deps:
+      - libsndfile
+    options:
+      - --enable-high-precision
+    ldflags:
+      - -lmvec
+
+  libseccomp2:
+
+  libshine3:
+
+  libshout3:
+    deps:
+      - libogg
+    cflags:
+      - -Wno-implicit-function-declaration
+
+  libslang2:
+    cflags:
+      - -fno-finite-math-only
+    deps:
+      - zlib
+
+  libsndfile1:
+    cflags:
+      - -fno-finite-math-only
+
+  libsodium23:
+
+  libspeex1:
+
+  libthai-data:
+    deps:
+      - libdatrie
+    options:
+      - --disable-dict
+
+  libtheora0:
+    deps:
+      - libogg
+    options:
+      - --disable-examples
+
+  libtiff6:
+    cflags:
+      - -fno-finite-math-only
+
+  libtirpc-common:
+    options:
+      - --disable-gssapi
+
+  libtwolame0:
+    cflags:
+      - -fno-finite-math-only
+
+  libuchardet0:
+    ldflags:
+      - -lstdc++
+
+  libudfread0:
+
+  libvo-amrwbenc0:
+
+  libwavpack1:
+    cflags:
+      - -fno-finite-math-only
+
+  libwebpmux3:
+    cflags:
+      - -fno-finite-math-only
+
+  libxml2:
+    deps:
+      - zlib
+    cflags:
+      - -fno-finite-math-only
+    options:
+      - --without-python
+      - --disable-maintainer-mode
+
+  libxslt1.1:
+    deps:
+      - libxml2
+      - zlib
+      - python
+    cflags:
+      - -fno-finite-math-only
+
+  libxtables12:
+    deps:
+      - libmnl
+      - libnftnl
+    cflags:
+      - -fno-finite-math-only
+
+  libxxhash0:
+
+  libyajl2:
+
+  libyaml-0-2:
+
+  libzmq5:
+    cflags:
+      - -Wno-error
+      - -Wno-deprecated-ofast
+    ldflags:
+      - -lstdc++
+
+  libzvbi-common:
+    cflags:
+      - -fno-finite-math-only
+
+  logrotate:
+    deps:
+      - popt
+
+  nano:
+    deps:
+      - ncurses
+    ldflags:
+      - -lncursesw
+      - -ltinfo
+
+  ocl-icd-libopencl1:
+
+  parted:
+    deps:
+      - libuuid
+      - ncurses
+      - readline
+    cflags:
+      - -DUUID_STR_LEN=37
+    options:
+      - --disable-device-mapper
+
+  procps:
+    deps:
+      - ncurses
+    ldflags:
+      - -lncursesw
+      - -ltinfo
+
+  psmisc:
+    deps:
+      - ncurses
+    ldflags:
+      - -lncursesw
+      - -ltinfo
+    options:
+      - ac_cv_member_struct_user_regs_struct_orig_eax=no
+      - ac_cv_member_struct_user_regs_struct_orig_rax=no
+      - ac_cv_member_struct_pt_regs_orig_gpr3=no
+      - ac_cv_member_struct_pt_regs_uregs=no
+      - ac_cv_member_struct_user_pt_regs_regs=no
+
+  sudo:
+    options:
+      - "--sysconfdir='${prefix}/share/sudo/etc'"
+      - --disable-tmpfiles.d
+
+  #! ===========================================================================
+  #! Deps
+
+  # ncurses:
+  #   source:
+  #     type: apt
+  #     value: ncurses
+  #   options:
+  #     - --with-shared
+  #     - --disable-stripping
+  #     - --enable-widec
+
+  ncurses:
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/ncurses/ncurses-6.6.tar.gz
+    options:
+      - --disable-stripping
+      - --with-shared
+      - --with-termlib=tinfo
+      - --enable-widec
+      - --enable-overwrite
+      - --without-debug
+      - --without-normal
+
+  attr:
+    source:
+      type: url
+      value: https://download.savannah.gnu.org/releases/attr/attr-2.5.2.tar.gz
+
+  libraw1394:
+    source:
+      type: url
+      value: https://sourceforge.net/projects/libraw1394/files/libraw1394/libraw1394-2.0.5.tar.gz/download
+
+  python:
+    source:
+      type: url
+      value: https://code.launchpad.net/ubuntu/+archive/primary/+sourcefiles/python3.12/3.12.2-4build4/python3.12_3.12.2.orig.tar.xz
+    options:
+      - ac_cv_file__dev_ptmx=yes
+      - ac_cv_file__dev_ptc=no
+      - --with-build-python
+      - --disable-ipv6
+      - CURSES_LIBS=-lncursesw
+      - PANEL_LIBS=-lpanelw
+    deps:
+      - bzip2
+      - gdbm
+      - libffi
+      - libuuid
+      - libxcrypt
+      - ncurses
+      - readline
+      - xz
+      - zlib
+    ldflags:
+      - -lncursesw
+      - -ltinfo
+
+  bzip2:
+    version: 66c46b8c9436613fd81bc5d03f63a61933a4dcc3
+    source:
+      type: url_git
+      value: https://gitlab.com/bzip2/bzip2
+      commit: 66c46b8c9436613fd81bc5d03f63a61933a4dcc3
+
+  gdbm:
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/gdbm/gdbm-1.25.tar.gz
+
+  libffi:
+    source:
+      type: url
+      value: https://github.com/libffi/libffi/releases/download/v3.4.7/libffi-3.4.7.tar.gz
+
+  libuuid:
+    source:
+      type: url
+      value: https://sourceforge.net/projects/libuuid/files/libuuid-1.0.3.tar.gz/download
+    cflags:
+      - -Wno-implicit-function-declaration
+
+  libxcrypt:
+    source:
+      type: url
+      value: https://github.com/besser82/libxcrypt/releases/download/v4.4.38/libxcrypt-4.4.38.tar.xz
+
+  readline:
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/readline/readline-8.2.tar.gz
+
+  xz:
+    source:
+      type: url
+      value: https://github.com/tukaani-project/xz/releases/download/v5.8.1/xz-5.8.1.tar.gz
+    options:
+      - --disable-fortran
+      - --without-cfitsio
+      - --without-pgplot
+
+  libmd:
+    source:
+      type: url
+      value: https://archive.hadrons.org/software/libmd/libmd-1.1.0.tar.xz
+
+  libexpat:
+    source:
+      type: url
+      value: https://github.com/libexpat/libexpat/releases/download/R_2_7_1/expat-2.7.1.tar.gz
+
+  libdebian-installer:
+    source:
+      type: url
+      value: https://salsa.debian.org/installer-team/libdebian-installer/-/archive/0.125/libdebian-installer-0.125.tar.gz?ref_type=tags
+    deps:
+      - check
+
+  check:
+    source:
+      type: url
+      value: https://github.com/libcheck/check/releases/download/0.15.2/check-0.15.2.tar.gz
+
+  dvdread:
+    source:
+      type: url
+      value: https://github.com/ShiftMediaProject/libdvdread/archive/refs/tags/6.1.3-1.tar.gz
+
+  libevent:
+    source:
+      type: url
+      value: https://github.com/libevent/libevent/releases/download/release-2.2.1-alpha/libevent-2.2.1-alpha-dev.tar.gz
+    options:
+      - --disable-openssl
+
+  zlib:
+    source:
+      type: url
+      value: https://github.com/madler/zlib/releases/download/v1.3.1/zlib-1.3.1.tar.gz
+
+  libtool:
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/libtool/libtool-2.5.4.tar.xz
+
+  mpfr:
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/mpfr/mpfr-4.2.1.tar.gz
+    deps:
+      - gmp
+
+  gmp:
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/gmp/gmp-6.3.0.tar.xz
+
+  libnfnetlink:
+    source:
+      type: url
+      value: https://www.netfilter.org/projects/libnfnetlink/files/libnfnetlink-1.0.2.tar.bz2
+
+  libmnl:
+    source:
+      type: url
+      value: https://www.netfilter.org/projects/libmnl/files/libmnl-1.0.5.tar.bz2
+
+  libnftnl:
+    source:
+      type: url
+      value: https://www.netfilter.org/projects/libnftnl/files/libnftnl-1.2.8.tar.xz
+    deps:
+      - libmnl
+
+  libedit:
+    source:
+      type: url
+      value: https://thrysoee.dk/editline/libedit-20250104-3.1.tar.gz
+    deps:
+      - ncurses
+    ldflags:
+      - -lncursesw
+      - -ltinfo
+
+  libtasn1:
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/libtasn1/libtasn1-4.20.0.tar.gz
+
+  libsndfile:
+    source:
+      type: url
+      value: https://github.com/libsndfile/libsndfile/releases/download/1.2.2/libsndfile-1.2.2.tar.xz
+    cflags:
+      - -fno-finite-math-only
+
+  libogg:
+    source:
+      type: url
+      value: https://github.com/xiph/ogg/releases/download/v1.3.5/libogg-1.3.5.tar.gz
+
+  popt:
+    source:
+      type: url
+      value: https://github.com/rpm-software-management/popt/archive/refs/tags/popt-1.19-release.tar.gz
+
+  libdatrie:
+    source:
+      type: url
+      value: https://github.com/tlwg/libdatrie/releases/download/v0.2.13/libdatrie-0.2.13.tar.xz
+
+  #! Turn off
+
+  # libyuv0:
+  #   ldflags:
+  #     - -lm
+  #     - -lstdc++
+  #     - -latomic
+
+  # e2fsprogs: #! XOR gcc, clang
+  #   options:
+  #     - --disable-e2freefrag # for GCC
+  #   cflags:
+  #     - -D__SANE_USERSPACE_TYPES__ # for Clang
+  #   #! wrong(llm)
+  #   cflags:
+  #     - -ffast-math
+
+  # libdaemon0:
+  #   options:
+  #     - ac_cv_func_setpgrp_void=yes
+  # #! wrong(llm)
+  #   options:
+  #     - --disable-examples
+
+  # libsdl2-2.0-0:
+  #   cflags:
+  #     - -fno-finite-math-only
+  #   ldflags:
+  #     - -latomic
+
+  # #! test example case
+  # libmysofa1:
+  #   deps:
+  #     - cunit
+
+  # # O
+  # cunit:
+  #   source:
+  #     type: url
+  #     value: https://sourceforge.net/projects/cunit/files/CUnit/2.1-3/CUnit-2.1-3.tar.bz2/download
+
+  # libsoxr0:
+  #   cflags:
+  #     - -fno-finite-math-only
+  #   options:
+  #     - -DBUILD_SHARED_LIBS=ON
+
+  #! hang
+  # libgraphite2-3:
+  #   ldflags:
+  #     - -lstdc++
+  #     - -lm
+
+# EOF

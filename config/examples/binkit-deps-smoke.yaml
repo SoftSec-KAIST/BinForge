@@ -1,0 +1,156 @@
+# Binkit targets that consume all six captured build dependencies.
+# Five targets x GCC 13.3.0 x x86-64 x O2 = five variants.
+build:
+  opti:
+  - O2
+  arch:
+  - x86_64
+  compiler:
+  - gcc-13.3.0
+  extra_compiler_options:
+    pie: false
+    no_inline: false
+    stack_protector: false
+targets:
+- a2ps
+- gnudos
+- inetutils
+- recutils
+- texinfo
+projects:
+  a2ps:
+    version: 4.15.8
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/a2ps/a2ps-4.15.8.tar.gz
+      archive:
+        group: gnu
+        name: a2ps.tar.gz
+        md5: c782f393c815f0359aa380a05d2b29cb
+    deps:
+    - gc
+    - libpaper
+  gnudos:
+    version: 2.0
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/gnudos/gnudos-2.0.tar.gz
+      archive:
+        group: gnu
+        name: gnudos.tar.gz
+        md5: 1384d1df54f2fc6338d57d89dbe1fe3f
+    deps:
+    - ncurses
+    ldflags:
+    - -lncursesw
+    - -ltinfo
+  inetutils:
+    version: 2.7
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/inetutils/inetutils-2.7.tar.gz
+      archive:
+        group: gnu
+        name: inetutils.tar.gz
+        md5: eed294e7b170cbbb0ff86493ef4c1273
+    deps:
+    - libxcrypt
+    - ncurses
+    cflags:
+    - -D_PATH_PROCNET_DEV="/proc/net/dev"
+    options:
+    - --with-path-procnet-dev="/proc/net/dev"
+    ldflags:
+    - -lncursesw
+    - -ltinfo
+  recutils:
+    version: 1.9
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/recutils/recutils-1.9.tar.gz
+      archive:
+        group: gnu
+        name: recutils.tar.gz
+        md5: ee5da209df9a1f80e65c9739a814ce34
+    deps:
+    - libuuid
+    cflags:
+    - -Wno-implicit-function-declaration
+  texinfo:
+    version: 7.3
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/texinfo/texinfo-7.3.tar.gz
+      archive:
+        group: gnu
+        name: texinfo.tar.gz
+        md5: 348742f41a07021c3d3452b76de83597
+    deps:
+    - ncurses
+    ldflags:
+    - -lncursesw
+    - -ltinfo
+    options:
+    - --disable-perl-xs
+  gc:
+    source:
+      type: url
+      value: https://github.com/ivmai/bdwgc/releases/download/v8.2.8/gc-8.2.8.tar.gz
+      archive:
+        group: binkit-deps
+        name: gc-8.2.8.tar.gz
+        md5: ad7298be1a300fc0ce75196718036c61
+    deps:
+    - libatomic
+  libatomic:
+    source:
+      type: url
+      value: https://github.com/bdwgc/libatomic_ops/releases/download/v7.8.2/libatomic_ops-7.8.2.tar.gz
+      archive:
+        group: binkit-deps
+        name: libatomic_ops-7.8.2.tar.gz
+        md5: d07b3d8369d7f9efdca59f7501dd1117
+  libpaper:
+    source:
+      type: url
+      value: https://github.com/rrthomas/libpaper/releases/download/v2.2.6/libpaper-2.2.6.tar.gz
+      archive:
+        group: binkit-deps
+        name: libpaper-2.2.6.tar.gz
+        md5: 794552e5e5b9796c15bc222fefd9e1ff
+    options:
+    - --enable-relocatable
+  libuuid:
+    source:
+      type: url
+      value: https://downloads.sourceforge.net/project/libuuid/libuuid-1.0.3.tar.gz
+      archive:
+        group: binkit-deps
+        name: libuuid-1.0.3.tar.gz
+        md5: d44d866d06286c08ba0846aba1086d68
+    cflags:
+    - -Wno-implicit-function-declaration
+  libxcrypt:
+    source:
+      type: url
+      value: https://github.com/besser82/libxcrypt/releases/download/v4.4.38/libxcrypt-4.4.38.tar.xz
+      archive:
+        group: binkit-deps
+        name: libxcrypt-4.4.38.tar.xz
+        md5: 1796a5d20098e9dd9e3f576803c83000
+  ncurses:
+    source:
+      type: url
+      value: https://ftp.gnu.org/gnu/ncurses/ncurses-6.6.tar.gz
+      archive:
+        group: binkit-deps
+        name: ncurses-6.6.tar.gz
+        md5: dd45bf6854430af403452a7a6a40652c
+    options:
+    - --disable-stripping
+    - --with-shared
+    - --with-termlib=tinfo
+    - --enable-widec
+    - --enable-overwrite
+    - --without-debug
+    - --without-normal

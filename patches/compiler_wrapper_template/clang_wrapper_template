@@ -1,12 +1,14 @@
 #!/bin/bash
 
 COMPILER_BINARY="${BinForge}/tools/clang/${clang-ver}/bin/_clang"
+CONFTEST_SOURCE="${BinForge}/patches/conftest/conftest.c"
 
 if [[ "$*" != *"--print-multiarch"* ]]; then
-    exec "$COMPILER_BINARY" "$@"
+    # clang++ and clang-cl may be symlinks to clang; Clang selects its driver
+    # mode from argv[0], so preserve the name used to call the wrapper.
+    exec -a "$0" "$COMPILER_BINARY" "$@"
 fi
 
-# find and print --target=...
 target="x86_64-linux-gnu"
 for arg in "$@"; do
     if [[ $arg == --target=* ]]; then
@@ -14,16 +16,12 @@ for arg in "$@"; do
     fi
 done
 
-conftest_dir="$HOME/BinForge/patches/conftest"
-original_conftest_c=$conftest_dir/conftest.c
-rand_str=$(mktemp -u XXXXXX)
-temp_conftest_c=$conftest_dir/conftest_$rand_str.c
-temp_conftest_out=$conftest_dir/conftest_$rand_str.out
-
-cp $original_conftest_c $temp_conftest_c
-$COMPILER_BINARY --target=$target -E $temp_conftest_c >$temp_conftest_out # 2>/dev/null
-grep -v '^#' $temp_conftest_out | grep -v '^ *$' | tr -d ' 	'
-rm -f $temp_conftest_c $temp_conftest_out
-
-# EOF
-
+if ! preprocessed=$("$COMPILER_BINARY" --target="$target" -E "$CONFTEST_SOURCE"); then
+    exit 1
+fi
+multiarch=$(printf '%s\n' "$preprocessed" | grep -v '^#' | grep -v '^[[:space:]]*$' | tr -d ' \t\r\n')
+if [[ -z "$multiarch" ]]; then
+    echo "Could not determine multiarch for $target" >&2
+    exit 1
+fi
+printf '%s\n' "$multiarch"

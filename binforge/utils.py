@@ -1,17 +1,15 @@
 import sys
 import os
 import re
-
-from yaml import safe_load
-from hashlib import md5
+import shlex
+import yaml
 from inspect import signature
 from tempfile import TemporaryDirectory
 from colorama import Fore, Style
 from threading import Thread
 from subprocess import Popen, DEVNULL, PIPE
 from dataclasses import dataclass
-from multiprocessing import cpu_count, Pool
-from concurrent.futures import ProcessPoolExecutor, as_completed
+from concurrent.futures import FIRST_COMPLETED, ProcessPoolExecutor, wait
 
 from binforge.types_helper import *
 from binforge.logging_helper import *
@@ -32,6 +30,19 @@ COLOR_BLUE = Fore.BLUE
 COLOR_RED = Fore.RED
 COLOR_RESET = Style.RESET_ALL
 
+
+def normalize_version(version: Any, default: str = "latest") -> str:
+    if version is None:
+        return default
+
+    version_str = str(version).strip()
+    return version_str if version_str else default
+
+def load_yaml(file_path: str | Any) -> Any:
+    with open(file_path, 'r') as f:
+        data = yaml.load(f, Loader=yaml.BaseLoader)
+    return data
+
 ##! ========== Shell: Command ==========
 
 def streamer(stream: IO[str], storage: list, log_func: Callable, DEBUG_LEVEL: int=0) -> None:
@@ -43,9 +54,9 @@ def streamer(stream: IO[str], storage: list, log_func: Callable, DEBUG_LEVEL: in
             log_func(f"{line.strip()}")
 
 def execute_command(
-    command: str | List[Dict],
+    command: str | list[dict],
     directory: str | None = None,
-    env_vars: Dict | None = None,
+    env_vars: dict | None = None,
     replace_env: bool = False,
     exit_on_error: bool = True,
     DEBUG_LEVEL: int = 2,
@@ -115,6 +126,8 @@ def execute_command(
             process.wait()
             stdout_thread.join()
             stderr_thread.join()
+            process.stdout.close()
+            process.stderr.close()
 
             # Collect outputs
             stdout = "\n".join(stdout_lines)
@@ -148,11 +161,11 @@ def execute_command(
 
 def parallel_execute_func(
     func: Callable,
-    dynamic_values_list: List[Any],
+    dynamic_values_list: list[Any],
     dynamic_arg_name: str = "arg_name",
     max_parallel_tasks: int = 10,
     **kwargs
-) -> List[Any]:
+) -> list[Any]:
     # Extract the function's signature to identify valid arguments
     func_sig = signature(func)
     valid_args = set(func_sig.parameters.keys())
@@ -160,38 +173,29 @@ def parallel_execute_func(
     # Filter keyword arguments to include only those valid for the function
     static_args = {key: value for key, value in kwargs.items() if key in valid_args}
 
-    results = []
+    results = [None] * len(dynamic_values_list)
+    items = iter(enumerate(dynamic_values_list))
     with ProcessPoolExecutor(max_workers=max_parallel_tasks) as executor:
-        futures = []
-        for item in dynamic_values_list:
-            # Merge static arguments with the dynamic argument
+        pending = {}
+
+        def submit_next() -> bool:
+            try:
+                index, item = next(items)
+            except StopIteration:
+                return False
             kwargs_with_dynamic_arg = {**static_args, dynamic_arg_name: item}
-            # Submit the task to the executor
-            futures.append(executor.submit(func, **kwargs_with_dynamic_arg))
+            pending[executor.submit(func, **kwargs_with_dynamic_arg)] = index
+            return True
 
-            # If the number of tasks reaches the limit, process the completed tasks
-            if len(futures) >= max_parallel_tasks:
-                for f in as_completed(futures[:max_parallel_tasks]):
-                    results.append(f.result())  # Collect the result of the completed task
-                    futures.remove(f)  # Remove the completed task from the futures list
+        for _ in range(min(max_parallel_tasks, len(dynamic_values_list))):
+            submit_next()
 
-        # Process any remaining tasks
-        for f in as_completed(futures):
-            results.append(f.result())  # Collect the result of the remaining tasks
-
-    return results
-
-def run_command_in_pool(kwargs: Dict) -> CommandResult:
-    return execute_command(**kwargs)
-
-def parallel_execute_commands(commands: List[Dict], max_workers: int | None = None) -> List[CommandResult]:
-    max_workers = max_workers or cpu_count()
-    results = []
-
-    # Using a Pool with limited max_workers
-    with Pool(processes=max_workers) as pool:
-        for result in pool.imap_unordered(run_command_in_pool, commands):
-            results.append(result)  # Collect results as they are completed
+        while pending:
+            completed, _ = wait(pending, return_when=FIRST_COMPLETED)
+            for future in completed:
+                results[pending.pop(future)] = future.result()
+            for _ in completed:
+                submit_next()
 
     return results
 
@@ -223,6 +227,14 @@ def print_env_variable(env_var_name: str) -> None:
     else:
         logger.error(f"Environment variable \"{env_var_name}\" is not set.")
 
+def add_path_env(new_dir: str) -> None:
+    current_path = os.environ.get("PATH", "")
+    if new_dir not in current_path.split(os.pathsep):
+        os.environ["PATH"] = f"{new_dir}{os.pathsep}{current_path}"
+
+def set_path_env(new_dir: str) -> None:
+    os.environ["PATH"] = new_dir
+
 ##! ========== SHELL: MISC ==========
 
 def mkdir(path: str, exist_ok: bool = True) -> None:
@@ -241,26 +253,30 @@ def is_directory_empty(path: str) -> bool:
 def file_exists(path: str) -> bool:
     return os.path.isfile(path)
 
-def is_file_empty(file_path):
+def is_file_empty(file_path: str) -> bool:
     return os.path.getsize(file_path) == 0
 
-def load_yaml(file_path:str|Any):
-    with open(file_path, 'r') as f:
-        data = safe_load(f)
-    return data
+def find_files(file_name, root_path):
+    matches = []
+    for dirpath, dirnames, filenames in os.walk(root_path):
+        if file_name in filenames:
+            matches.append(os.path.join(dirpath, file_name))
+    return matches
 
 ##! ========== Handle tar ==========
 
 def get_tar_root_name(source_file_path: str) -> str | None:
-    command_detect_tar_root = f"tar --auto-compress -tf {source_file_path} | sed -e 's@/.*@@' | uniq"
-    command_wc = f"{command_detect_tar_root} | wc -l"
-    tar_root_name = execute_command(command_detect_tar_root, DEBUG_LEVEL=0).stdout
-    num_tar_root = execute_command(command_wc, DEBUG_LEVEL=0).stdout
-
-    if tar_root_name == "." or int(num_tar_root) != 1:
+    result = execute_command(
+        f"tar --auto-compress -tf {shlex.quote(source_file_path)}",
+        DEBUG_LEVEL=0,
+        exit_on_error=False,
+    )
+    if result.returncode != 0:
+        raise RuntimeError(f"Cannot list source archive: {source_file_path}")
+    roots = {member.split("/", 1)[0] for member in result.stdout.splitlines() if member}
+    if len(roots) != 1 or "." in roots:
         return None
-    else:
-        return tar_root_name
+    return next(iter(roots))
 
 def unzip_tar(
     source_archive_path: str,
@@ -277,14 +293,27 @@ def unzip_tar(
     if directory_exists(source_code_path):
         if not is_directory_empty(source_code_path):
             return source_code_path
+        os.rmdir(source_code_path)
 
     tar_root_name = get_tar_root_name(source_archive_path)
+    if tar_root_name is None:
+        raise ValueError(f"Expected one top-level directory in source archive: {source_archive_path}")
 
     with TemporaryDirectory(dir="/tmp", delete=True) as temp_dir_path:
-        command_extract = f"tar --auto-compress -xf {source_archive_path} -C {temp_dir_path}"
-        command_move = f"mv {temp_dir_path}/{tar_root_name} {source_code_path}"
-        execute_command(command_extract, DEBUG_LEVEL=0)
-        execute_command(command_move, DEBUG_LEVEL=0)
+        command_extract = f"tar --auto-compress -xf {shlex.quote(source_archive_path)} -C {shlex.quote(temp_dir_path)}"
+        result = execute_command(command_extract, DEBUG_LEVEL=0, exit_on_error=False)
+        if result.returncode != 0:
+            raise RuntimeError(f"Failed to extract source archive: {source_archive_path}")
+        extracted_root = os.path.join(temp_dir_path, tar_root_name)
+        if not os.path.isdir(extracted_root):
+            raise RuntimeError(f"Archive root is not a directory: {source_archive_path}")
+        result = execute_command(
+            f"mv {shlex.quote(extracted_root)} {shlex.quote(source_code_path)}",
+            DEBUG_LEVEL=0,
+            exit_on_error=False,
+        )
+        if result.returncode != 0 or not os.path.isdir(source_code_path):
+            raise RuntimeError(f"Failed to place extracted source: {source_code_path}")
 
     return source_code_path
 
@@ -294,38 +323,19 @@ def get_compressed_extension(url: str) -> str:
     matches = pattern.findall(url)
     if matches:
         last_match = matches[-1]
-        return last_match[1]
+        return last_match[1][1:]
     else:
         logger.info("[-] Failed to get compressed file's extension from url:")
         logger.info(f"     {url}")
         logger.info("Set extension as \".archive\"")
         return ".archive"
 
-
-def get_version_from_url(project_name: str, url: str) -> str:
-    version_pattern = r"([0-9]+\.[0-9]+(?:\.[0-9]+)?)"
-    version_match = re.search(version_pattern, url)
-    if version_match:
-        return version_match.group(1)
-    else:
-        logger.info(f"{project_name}'s version is not match.")
-        logger.info(f"  URL: {url}")
-        logger.info(f"  Set version as \"0.0.0\"")
-        return "0.0.0"
-
-
-def add_path_env(new_dir: str) -> None:
-    current_path = os.environ.get("PATH", "")
-    if new_dir not in current_path.split(os.pathsep):
-        os.environ["PATH"] = f"{new_dir}{os.pathsep}{current_path}"
-
-def set_path_env(new_dir: str) -> None:
-    os.environ["PATH"] = new_dir
-
-def count_leading_spaces(line: str) -> int:
-    return len(line) - len(line.lstrip())
+##! ========== etc. ==========
 
 def modify_config(config_file_path: str) -> None:
+    def count_leading_spaces(line: str) -> int:
+        return len(line) - len(line.lstrip())
+
     command_backup = f"cp {config_file_path} {config_file_path}.backup"
     execute_command(command_backup, DEBUG_LEVEL=0)
     with open(config_file_path, "r") as file:
@@ -367,51 +377,47 @@ def modify_config(config_file_path: str) -> None:
     # command_diff = f"diff {config_file_path}.backup {config_file_path}; true"
     # execute_command(command_diff, DEBUG_LEVEL=2)
 
-def path_distance(path: str) -> int:
-    return path.count('/')
 
-def calculate_hash(filepath: str) -> str | None:
-    try:
-        with open(filepath, "rb") as f:
-            return md5(f.read()).hexdigest()
-    except FileNotFoundError:
-        return None
+def is_valid_git_repo(path: str, debug_level: int=-1):
+    command = f"git -C {path} rev-parse --show-toplevel"
+    result = execute_command(command, exit_on_error=False, DEBUG_LEVEL=debug_level)
 
+    if result.returncode == 0 and result.stdout.strip() == path:
+        return True
 
-def remove_dup(binaries: list[str], path: str) -> list[str]:
-    unique_binaries = {}
-    for binary in binaries:
-        binary = os.path.join(path, binary)
-        name = os.path.basename(binary)
-        distance = path_distance(binary)
-        file_hash = calculate_hash(binary)
+    if debug_level >= 0:
+        logger.info(f"[*] Command: `{command}`")
+        if result.returncode != 0:
+            logger.info(f"[-] command returncode: {result.returncode}")
+        elif result.stdout.strip() != path:
+            logger.info(f"[-] command stdout: {result.stdout} (it should be '{path}')")
 
-        if file_hash is None:
-            continue
-
-        if name not in unique_binaries:
-            unique_binaries[name] = (binary, distance, file_hash)
-        else:
-            current_binary, current_distance, current_hash = unique_binaries[name]
-            if file_hash == current_hash:
-                if distance < current_distance or (distance == current_distance and binary < current_binary):
-                    unique_binaries[name] = (binary, distance, file_hash)
-            else:
-                unique_binaries[f"{name}_{file_hash}"] = (binary, distance, file_hash)
-
-    result = sorted([binary[0] for binary in unique_binaries.values()])
-    return result
+    return False
 
 
-def split_by_package_blocks(input_str: str, n: int) -> list[str]:
-    blocks = re.split(r'(?=^Package: )', input_str, flags=re.M)
-    blocks = [b for b in blocks if b.strip()]
-    result = []
-    step = max(1, len(blocks) // n)
-    for i in range(0, len(blocks), step):
-        result.append("".join(blocks[i:i + step]))
+def git_clone(
+    repo_url: str,
+    target_dir: str,
+    debug_level: int=-1,
+) -> CommandResult | bool | None:
+    mkdir(target_dir, exist_ok=True)
 
-    return result[:n]
+    is_valid_repo = is_valid_git_repo(target_dir, debug_level=1)
+    if is_valid_repo:
+        logger.info(f"Repository {repo_url} is already cloned at directory '{target_dir}'.")
+        return True
+    else:
+        # Cloning is considered aborted due to network, permissions, etc.
+        command_cleanup = f"rm -rf {target_dir}"
+        execute_command(command_cleanup, exit_on_error=True, DEBUG_LEVEL=1)
 
+    # Check if the directory exists and is non-empty
+    if not os.path.isdir(target_dir) or not os.listdir(target_dir):
+        logger.info(f"[*] Cloning repo at '{target_dir}'")
+        #! Since output of git clone is stderr
+        command_clone = f"git clone {repo_url} {target_dir} 2>&1"
+        execute_command(command_clone, exit_on_error=True, DEBUG_LEVEL=debug_level)
+    else:
+        logger.info(f"Directory '{target_dir}' already exists and is not empty.")
 
 # EOF

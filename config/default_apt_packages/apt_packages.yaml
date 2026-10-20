@@ -1,0 +1,53 @@
+# ------------------------------------------------------------------------------
+# Default APT Packages Required for Building Toolchains
+#
+# This list includes essential development tools required for:
+# - Building crosstool-ng itself
+# - Building various cross-compiler toolchains (e.g., GCC-based)
+# - Building and installing Clang from source
+#
+# These packages should be installed via APT before initiating any builds.
+# ------------------------------------------------------------------------------
+
+default_packages:
+  - autoconf
+  - autogen
+  - automake
+  - binutils
+  - bison
+  - build-essential
+  - bzip2
+  - cmake
+  - curl
+  - docbook-utils
+  - docbook2x
+  - flex
+  - g++
+  - gawk
+  - gcc
+  - gcc-multilib
+  - gettext
+  - git
+  - gperf
+  - help2man
+  - libffi-dev
+  - libncurses-dev
+  - libpython3-dev
+  - libstdc++6
+  - libtool
+  - libtool-bin
+  - make
+  - ninja-build
+  - parallel
+  - patch
+  - po4a
+  - pkg-config
+  - rsync
+  - tar
+  - tcl
+  - texinfo
+  - universal-ctags
+  - unzip
+  - wget
+  - xz-utils
+  - autopoint
