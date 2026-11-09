@@ -2,9 +2,9 @@
 
 The normal source mode uses the projects and versions selected by the YAML configuration. BinForge can download URL sources or obtain APT source packages; these inputs can change as upstream repositories change.
 
-Paper mode uses the fixed `paper-sources.tar` bundle instead. The files prepared for the Zenodo deposit include the tar, its manifest, checksum, and source provenance and license notices. Its [manifest](../config/source-snapshots/paper-sources.json) and [SHA-256 checksum](../config/source-snapshots/paper-sources.tar.sha256) are also tracked in Git.
+Paper mode uses the fixed `paper-sources.tar` bundle instead. The Zenodo record includes the tar, its manifest, checksum, and source provenance and license notices. Its [manifest](../config/source-snapshots/paper-sources.json) and [SHA-256 checksum](../config/source-snapshots/paper-sources.tar.sha256) are also tracked in Git.
 
-Zenodo record: ZENODO_RECORD_URL
+Zenodo record: [BinForge Paper Source Snapshot](https://doi.org/10.5281/zenodo.24066008)
 
 Download `paper-sources.tar` from that record and place it at:
 

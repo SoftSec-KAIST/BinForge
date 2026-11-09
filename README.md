@@ -59,6 +59,21 @@ BinForge builds binary datasets from open source projects across compilers, targ
 
 `combine_extra_compiler_options: false` (the default) builds the flag values specified in `extra_compiler_options` once. Set it to `true` to build every on/off combination of the options marked `true`.
 
+## Binary datasets
+
+The [paper source snapshot](https://doi.org/10.5281/zenodo.24066008) contains the source packages and license notices used to build the datasets. The binary datasets are available on Zenodo by compiler flag setting. Each record provides one compressed archive with a directory per source project and binary files directly inside each project directory. **Default** uses none of the three extra compiler options; each other row enables the options named in that row.
+
+| Compiler flag setting | BinKit | Popcon |
+| --- | --- | --- |
+| Default | [Zenodo](https://doi.org/10.5281/zenodo.23563082) | [Zenodo](https://doi.org/10.5281/zenodo.23990135) |
+| Stack Protection | [Zenodo](https://doi.org/10.5281/zenodo.23992276) | [Zenodo](https://doi.org/10.5281/zenodo.23999062) |
+| No Inlining | [Zenodo](https://doi.org/10.5281/zenodo.24021470) | [Zenodo](https://doi.org/10.5281/zenodo.24024415) |
+| No Inlining + Stack Protection | [Zenodo](https://doi.org/10.5281/zenodo.24025727) | [Zenodo](https://doi.org/10.5281/zenodo.24028507) |
+| PIE | [Zenodo](https://doi.org/10.5281/zenodo.24034216) | [Zenodo](https://doi.org/10.5281/zenodo.24039438) |
+| PIE + Stack Protection | [Zenodo](https://doi.org/10.5281/zenodo.24043370) | [Zenodo](https://doi.org/10.5281/zenodo.24045360) |
+| PIE + No Inlining | [Zenodo](https://doi.org/10.5281/zenodo.24046338) | [Zenodo](https://doi.org/10.5281/zenodo.24047076) |
+| PIE + No Inlining + Stack Protection | [Zenodo](https://doi.org/10.5281/zenodo.24047988) | [Zenodo](https://doi.org/10.5281/zenodo.24052198) |
+
 ## How to use
 
 ### 1. Prepare the environment
